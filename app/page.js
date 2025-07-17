@@ -70,7 +70,39 @@ export default function AdminPage() {
       toast.error('Falha ao cadastrar o item!');
     }
   };
-  
+
+  const handleEdit = (item) => {
+    setForm({
+      name: item.name,
+      status: item.status,
+      restaurantId: item.restaurantId,
+      price: item.price,
+      image: null,
+      description: item.description
+    });
+  };
+
+  const handleDelete = async (id) => {
+    if (confirm('Tem certeza que deseja excluir este item?')) {
+      try {
+        const res = await fetch(`/api/menu`, {
+          method: 'DELETE',
+          body: JSON.stringify({ id }),
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+
+        if (!res.ok) throw new Error('Erro ao excluir item');
+
+        toast.success('Item excluído com sucesso!');
+        window.location.reload();
+      } catch (err) {
+        console.error(err);
+        toast.error('Falha ao excluir o item!');
+      }
+    }
+  };
 
   return (
     <main style={{
@@ -152,6 +184,8 @@ export default function AdminPage() {
             <h3 style={{ margin: '10px 0', color: '#333' }}>{item.name}</h3>
             <p style={{ color: '#777' }}>{item.status} - {item.price}</p>
             <p style={{ color: '#777' }}>{item.description}</p>
+            <button onClick={() => handleEdit(item)} style={{ ...buttonStyle, marginTop: '10px' }}>Editar</button>
+            <button onClick={() => handleDelete(item._id)} style={{ ...buttonStyle, marginTop: '10px', background: '#e3342f' }}>Excluir</button>
           </div>
         ))}
       </div>
