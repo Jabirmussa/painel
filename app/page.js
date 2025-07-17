@@ -1,19 +1,28 @@
 'use client';
 import { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
+import { QRCodeCanvas } from 'qrcode.react';
+
 
 export default function AdminPage() {
-  const [form, setForm] = useState({
+ 
+  const fakeRestaurants = [
+      { id: 'demo', name: 'Demo Restaurante' },
+      { id: 'rest01', name: 'Restaurante 01' },
+      { id: 'rest02', name: 'Restaurante 02' },
+    ];
+  const [menu, setMenu] = useState([]);
+  const [restaurants, setRestaurants] = useState(fakeRestaurants);
+  const [selectedRestaurant, setSelectedRestaurant] = useState(fakeRestaurants[0].id);
+ const [form, setForm] = useState({
     name: '',
     status: 'Disponível',
-    restaurantId: 'demo',
+    restaurantId: selectedRestaurant,
     price: '',
     image: null,
     description: ''
   });
-
-  const [menu, setMenu] = useState([]);
-
+  
   useEffect(() => {
     fetch('/api/menu')
       .then(res => res.json())
@@ -127,6 +136,13 @@ export default function AdminPage() {
         flexDirection: 'column',
         gap: '15px'
       }}>
+        <label>
+          Selecione Restaurante:
+          <select name="restaurantId" value={form.restaurantId} onChange={handleChange} style={inputStyle}>
+            {restaurants.map(r => <option key={r.id} value={r.id}>{r.name}</option>)}
+          </select>
+        </label>
+
         <input
           name="name"
           placeholder="Nome do prato"
@@ -189,6 +205,30 @@ export default function AdminPage() {
           </div>
         ))}
       </div>
+      <h2 style={{ marginTop: '50px', color: '#555' }}>QR Codes dos Restaurantes com Menu</h2>
+
+{restaurants.map(rest => {
+  const hasMenu = menu.some(item => item.restaurantId === rest.id);
+
+  if (!hasMenu) return null;
+
+  return (
+    <div key={rest.id} style={{ marginBottom: '20px', textAlign: 'center' }}>
+      <QRCodeCanvas 
+        value={`https://painel-orcin.vercel.app/${rest.id}`} 
+        size={200} 
+        bgColor="#FFFFFF" 
+        fgColor="#000000" 
+        level="H"
+      />
+      <p style={{ marginTop: '10px', color: '#333' }}>
+        Cardápio do <strong>{rest.name}</strong> - <code>{rest.id}</code>
+      </p>
+    </div>
+  );
+})}
+
+
     </main>
   );
 }
