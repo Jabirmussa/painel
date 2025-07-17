@@ -1,103 +1,180 @@
-import Image from "next/image";
+'use client';
+import { useState, useEffect } from 'react';
+import toast from 'react-hot-toast';
 
-export default function Home() {
+export default function AdminPage() {
+  const [form, setForm] = useState({
+    name: '',
+    status: 'Disponível',
+    restaurantId: 'demo',
+    price: '',
+    image: null,
+    description: ''
+  });
+
+  const [menu, setMenu] = useState([]);
+
+  useEffect(() => {
+    fetch('/api/menu')
+      .then(res => res.json())
+      .then(setMenu);
+  }, []);
+
+  const handleChange = (e) => {
+    const { name, value, files } = e.target;
+
+    if (name === 'image') {
+      setForm({ ...form, image: files[0] });
+    } else {
+      setForm({ ...form, [name]: value });
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+  
+    if (!form.image) {
+      toast.error('Por favor, selecione uma imagem!');
+      return;
+    }
+  
+    const formData = new FormData();
+    formData.append('name', form.name);
+    formData.append('price', form.price);
+    formData.append('status', form.status);
+    formData.append('restaurantId', form.restaurantId);
+    formData.append('image', form.image);
+    formData.append('description', form.description);
+  
+    try {
+      const res = await fetch('/api/menu', {
+        method: 'POST',
+        body: formData
+      });
+  
+      if (!res.ok) throw new Error('Erro no envio');
+  
+      toast.success('Item cadastrado com sucesso!');
+      setForm({
+        name: '',
+        status: 'Disponível',
+        restaurantId: 'demo',
+        price: '',
+        image: null,
+        description: ''
+      });
+  
+      window.location.reload();
+    } catch (err) {
+      console.error(err);
+      toast.error('Falha ao cadastrar o item!');
+    }
+  };
+  
+
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              app/page.js
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <main style={{
+      minHeight: '100vh',
+      background: '#f9fafb',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      padding: '40px 20px',
+      fontFamily: 'sans-serif'
+    }}>
+      <h1 style={{ fontSize: '2rem', marginBottom: '20px', color: '#333' }}>Painel Menu</h1>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+      <form onSubmit={handleSubmit} style={{
+        background: '#fff',
+        padding: '30px',
+        borderRadius: '12px',
+        boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+        width: '100%',
+        maxWidth: '400px',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '15px'
+      }}>
+        <input
+          name="name"
+          placeholder="Nome do prato"
+          value={form.name}
+          onChange={handleChange}
+          style={inputStyle}
+        />
+        <input
+          name="price"
+          placeholder="Preço"
+          value={form.price}
+          onChange={handleChange}
+          style={inputStyle}
+        />
+        <input
+          name="description"
+          placeholder="Descrição" 
+          value={form.description}
+          onChange={handleChange}
+          style={inputStyle}
+        />
+        <select name="status" value={form.status} onChange={handleChange} style={inputStyle}>
+          <option>Disponível</option>
+          <option>Esgotado</option>
+          <option>Em preparo</option>
+        </select>
+        <input
+          name="image"
+          type="file"
+          accept="image/*"
+          onChange={handleChange}
+          style={{ ...inputStyle, padding: '8px' }}
+        />
+        <button type="submit" style={buttonStyle}>Cadastrar</button>
+      </form>
+
+      <h2 style={{ marginTop: '50px', marginBottom: '20px', color: '#555' }}>Menu Atual</h2>
+
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+        gap: '15px',
+        width: '100%',
+        maxWidth: '1000px'
+      }}>
+        {menu.map(item => (
+          <div key={item._id} style={{
+            background: '#fff',
+            borderRadius: '8px',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
+            padding: '15px',
+            textAlign: 'center'
+          }}>
+            <img src={item.image} style={{ width: '100%', height: '150px', objectFit: 'cover', borderRadius: '8px' }} />
+            <h3 style={{ margin: '10px 0', color: '#333' }}>{item.name}</h3>
+            <p style={{ color: '#777' }}>{item.status} - {item.price}</p>
+            <p style={{ color: '#777' }}>{item.description}</p>
+          </div>
+        ))}
+      </div>
+    </main>
   );
 }
+
+const inputStyle = {
+  padding: '12px',
+  borderRadius: '8px',
+  border: '1px solid #ddd',
+  fontSize: '1rem',
+  color: '#333',
+  background: '#f9f9f9'
+};
+
+const buttonStyle = {
+  padding: '12px',
+  background: '#4f46e5',
+  color: '#fff',
+  border: 'none',
+  borderRadius: '8px',
+  fontSize: '1rem',
+  cursor: 'pointer',
+  transition: '0.3s'
+};
