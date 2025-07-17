@@ -9,35 +9,53 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
+// GET: Listar o menu
+export async function GET() {
+  try {
+    await connectDB();
+    const items = await MenuItem.find();
+    return NextResponse.json(items);
+  } catch (err) {
+    console.error('Erro ao buscar menu:', err);
+    return NextResponse.json({ error: 'Erro ao buscar menu' }, { status: 500 });
+  }
+}
+
+// POST: Cadastrar um prato
 export async function POST(req) {
-  await connectDB();
+  try {
+    await connectDB();
 
-  const data = await req.formData();
-  const file = data.get('image');
+    const data = await req.formData();
+    const file = data.get('image');
 
-  const arrayBuffer = await file.arrayBuffer();
-  const buffer = Buffer.from(arrayBuffer);
+    const arrayBuffer = await file.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
 
-  const uploadResult = await new Promise((resolve, reject) => {
-    const stream = cloudinary.uploader.upload_stream(
-      { folder: 'menu-items' },
-      (error, result) => {
-        if (error) return reject(error);
-        resolve(result);
-      }
-    );
+    const uploadResult = await new Promise((resolve, reject) => {
+      const stream = cloudinary.uploader.upload_stream(
+        { folder: 'menu-items' },
+        (error, result) => {
+          if (error) return reject(error);
+          resolve(result);
+        }
+      );
 
-    stream.end(buffer);
-  });
+      stream.end(buffer);
+    });
 
-  const newItem = await MenuItem.create({
-    name: data.get('name'),
-    price: data.get('price'),
-    status: data.get('status'),
-    restaurantId: data.get('restaurantId'),
-    image: uploadResult.secure_url,
-    description: data.get('description')
-  });
+    const newItem = await MenuItem.create({
+      name: data.get('name'),
+      price: data.get('price'),
+      status: data.get('status'),
+      restaurantId: data.get('restaurantId'),
+      image: uploadResult.secure_url,
+      description: data.get('description') || '',
+    });
 
-  return NextResponse.json(newItem);
+    return NextResponse.json(newItem);
+  } catch (err) {
+    console.error('Erro ao criar item do menu:', err);
+    return NextResponse.json({ error: 'Erro ao criar item' }, { status: 500 });
+  }
 }
