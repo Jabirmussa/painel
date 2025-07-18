@@ -168,6 +168,8 @@ export default function AdminPage() {
           <option>Disponível</option>
           <option>Esgotado</option>
           <option>Em preparo</option>
+          <option>Prato do dia</option>
+          <option>Sugestões</option>
         </select>
         <input
           name="image"
