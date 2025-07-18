@@ -11,6 +11,7 @@ const MenuItemSchema = new mongoose.Schema({
   image: String,
   price: String,
   description: String,
+  time: String,
 }, { timestamps: true });
 
 export default mongoose.models.MenuItem || mongoose.model('MenuItem', MenuItemSchema);

@@ -14,13 +14,16 @@ export default function AdminPage() {
   const [menu, setMenu] = useState([]);
   const [restaurants, setRestaurants] = useState(fakeRestaurants);
   const [selectedRestaurant, setSelectedRestaurant] = useState(fakeRestaurants[0].id);
+  const [editingId, setEditingId] = useState(null);
+
  const [form, setForm] = useState({
     name: '',
     status: 'Disponível',
     restaurantId: selectedRestaurant,
     price: '',
     image: null,
-    description: ''
+    description: '',
+    time: ''
   });
   
   useEffect(() => {
@@ -40,56 +43,69 @@ export default function AdminPage() {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-  
-    if (!form.image) {
-      toast.error('Por favor, selecione uma imagem!');
-      return;
-    }
-  
-    const formData = new FormData();
-    formData.append('name', form.name);
-    formData.append('price', form.price);
-    formData.append('status', form.status);
-    formData.append('restaurantId', form.restaurantId);
-    formData.append('image', form.image);
-    formData.append('description', form.description);
-  
-    try {
-      const res = await fetch('/api/menu', {
-        method: 'POST',
-        body: formData
-      });
-  
-      if (!res.ok) throw new Error('Erro no envio');
-  
-      toast.success('Item cadastrado com sucesso!');
-      setForm({
-        name: '',
-        status: 'Disponível',
-        restaurantId: 'demo',
-        price: '',
-        image: null,
-        description: ''
-      });
-  
-      window.location.reload();
-    } catch (err) {
-      console.error(err);
-      toast.error('Falha ao cadastrar o item!');
-    }
-  };
+  e.preventDefault();
 
-  const handleEdit = (item) => {
-    setForm({
-      name: item.name,
-      status: item.status,
-      restaurantId: item.restaurantId,
-      price: item.price,
-      image: null,
-      description: item.description
+  const formData = new FormData();
+  formData.append('name', form.name);
+  formData.append('price', form.price);
+  formData.append('status', form.status);
+  formData.append('restaurantId', form.restaurantId);
+  formData.append('description', form.description);
+  formData.append('time', form.time);
+
+  if (form.image) {
+    formData.append('image', form.image);
+  }
+
+  try {
+    const url = editingId ? '/api/menu' : '/api/menu';
+    const method = editingId ? 'PUT' : 'POST';
+
+    if (editingId) {
+      formData.append('id', editingId);
+    }
+
+    const res = await fetch(url, {
+      method,
+      body: formData
     });
-  };
+
+    if (!res.ok) throw new Error('Erro no envio');
+
+    toast.success(editingId ? 'Item atualizado com sucesso!' : 'Item cadastrado com sucesso!');
+
+    setForm({
+      name: '',
+      status: 'Disponível',
+      restaurantId: 'demo',
+      price: '',
+      image: null,
+      description: '',
+      time: ''
+    });
+    setEditingId(null); // resetando o modo edição
+
+    window.location.reload();
+  } catch (err) {
+    console.error(err);
+    toast.error(editingId ? 'Falha ao atualizar o item!' : 'Falha ao cadastrar o item!');
+  }
+};
+
+
+const handleEdit = (item) => {
+  setForm({
+    name: item.name,
+    status: item.status,
+    restaurantId: item.restaurantId,
+    price: item.price,
+    image: null,
+    description: item.description,
+    time: item.time
+  });
+  setEditingId(item._id); 
+};
+
 
   const handleDelete = async (id) => {
     if (confirm('Tem certeza que deseja excluir este item?')) {
@@ -158,6 +174,13 @@ export default function AdminPage() {
           style={inputStyle}
         />
         <input
+          name="time"
+          placeholder="Tempo de preparo"
+          value={form.time}
+          onChange={handleChange}
+          style={inputStyle}
+        />
+        <input
           name="description"
           placeholder="Descrição" 
           value={form.description}
@@ -178,7 +201,10 @@ export default function AdminPage() {
           onChange={handleChange}
           style={{ ...inputStyle, padding: '8px' }}
         />
-        <button type="submit" style={buttonStyle}>Cadastrar</button>
+        <button type="submit" style={buttonStyle}>
+          {editingId ? 'Atualizar' : 'Cadastrar'}
+        </button>
+
       </form>
 
       <h2 style={{ marginTop: '50px', marginBottom: '20px', color: '#555' }}>Menu Atual</h2>
@@ -202,6 +228,7 @@ export default function AdminPage() {
             <h3 style={{ margin: '10px 0', color: '#333' }}>{item.name}</h3>
             <p style={{ color: '#777' }}>{item.status} - {item.price}</p>
             <p style={{ color: '#777' }}>{item.description}</p>
+            <p style={{ color: '#777' }}>{item.time}</p>
             <button onClick={() => handleEdit(item)} style={{ ...buttonStyle, marginTop: '10px' }}>Editar</button>
             <button onClick={() => handleDelete(item._id)} style={{ ...buttonStyle, marginTop: '10px', background: '#e3342f' }}>Excluir</button>
           </div>

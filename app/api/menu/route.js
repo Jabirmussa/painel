@@ -51,6 +51,7 @@ export async function POST(req) {
       restaurantId: data.get('restaurantId'),
       image: uploadResult.secure_url,
       description: data.get('description') || '',
+      time: data.get('time') || '',
     });
 
     return NextResponse.json(newItem);
@@ -98,6 +99,7 @@ export async function PUT(req) {
         restaurantId: data.get('restaurantId'),
         image: imageUrl || undefined,
         description: data.get('description') || '',
+        time: data.get('time') || '',
       },
       { new: true }
     );
