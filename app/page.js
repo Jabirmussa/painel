@@ -83,7 +83,7 @@ export default function AdminPage() {
       description: '',
       time: ''
     });
-    setEditingId(null); // resetando o modo edição
+    setEditingId(null); 
 
     window.location.reload();
   } catch (err) {
@@ -139,124 +139,133 @@ const handleEdit = (item) => {
       padding: '40px 20px',
       fontFamily: 'sans-serif'
     }}>
-      <h1 style={{ fontSize: '2rem', marginBottom: '20px', color: '#333' }}>Painel Menu</h1>
+      <div className='principal-painel' >
+        <h1 style={{ fontSize: '2rem', marginBottom: '20px', color: '#333' }}>Painel Menu</h1>
 
-      <form onSubmit={handleSubmit} style={{
-        background: '#fff',
-        padding: '30px',
-        borderRadius: '12px',
-        boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
-        width: '100%',
-        maxWidth: '400px',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '15px'
-      }}>
-        <label>
-          Selecione Restaurante:
-          <select name="restaurantId" value={form.restaurantId} onChange={handleChange} style={inputStyle}>
-            {restaurants.map(r => <option key={r.id} value={r.id}>{r.name}</option>)}
+        <form onSubmit={handleSubmit} style={{
+          background: '#fff',
+          padding: '30px',
+          borderRadius: '12px',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+          width: '100%',
+          maxWidth: '400px',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '15px'
+        }}>
+          <label>
+            Selecione Restaurante:
+            <select name="restaurantId" value={form.restaurantId} onChange={handleChange} style={inputStyle}>
+              {restaurants.map(r => <option key={r.id} value={r.id}>{r.name}</option>)}
+            </select>
+          </label>
+
+          <input
+            name="name"
+            placeholder="Nome do prato"
+            value={form.name}
+            onChange={handleChange}
+            style={inputStyle}
+          />
+          <input
+            name="price"
+            placeholder="Preço"
+            value={form.price}
+            onChange={handleChange}
+            style={inputStyle}
+          />
+          <input
+            name="time"
+            placeholder="Tempo de preparo"
+            value={form.time}
+            onChange={handleChange}
+            style={inputStyle}
+          />
+          <input
+            name="description"
+            placeholder="Descrição" 
+            value={form.description}
+            onChange={handleChange}
+            style={inputStyle}
+          />
+          <select name="status" value={form.status} onChange={handleChange} style={inputStyle}>
+            {/* <option>Disponível</option> */}
+            {/* <option>Esgotado</option> */}
+            {/* <option>Em preparo</option> */}
+            <option>Pratos</option>
+            <option>Bebidas</option>
+            <option>Pizzas</option>
+            <option>Sugestões</option>
+            <option>Prato do dia</option>
           </select>
-        </label>
+          <input
+            name="image"
+            type="file"
+            accept="image/*"
+            onChange={handleChange}
+            style={{ ...inputStyle, padding: '8px' }}
+          />
+          <button type="submit" style={buttonStyle}>
+            {editingId ? 'Atualizar' : 'Cadastrar'}
+          </button>
 
-        <input
-          name="name"
-          placeholder="Nome do prato"
-          value={form.name}
-          onChange={handleChange}
-          style={inputStyle}
-        />
-        <input
-          name="price"
-          placeholder="Preço"
-          value={form.price}
-          onChange={handleChange}
-          style={inputStyle}
-        />
-        <input
-          name="time"
-          placeholder="Tempo de preparo"
-          value={form.time}
-          onChange={handleChange}
-          style={inputStyle}
-        />
-        <input
-          name="description"
-          placeholder="Descrição" 
-          value={form.description}
-          onChange={handleChange}
-          style={inputStyle}
-        />
-        <select name="status" value={form.status} onChange={handleChange} style={inputStyle}>
-          <option>Disponível</option>
-          <option>Esgotado</option>
-          <option>Em preparo</option>
-          <option>Prato do dia</option>
-          <option>Sugestões</option>
-        </select>
-        <input
-          name="image"
-          type="file"
-          accept="image/*"
-          onChange={handleChange}
-          style={{ ...inputStyle, padding: '8px' }}
-        />
-        <button type="submit" style={buttonStyle}>
-          {editingId ? 'Atualizar' : 'Cadastrar'}
-        </button>
-
-      </form>
-
-      <h2 style={{ marginTop: '50px', marginBottom: '20px', color: '#555' }}>Menu Atual</h2>
-
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-        gap: '15px',
-        width: '100%',
-        maxWidth: '1000px'
-      }}>
-        {menu.map(item => (
-          <div key={item._id} style={{
-            background: '#fff',
-            borderRadius: '8px',
-            boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
-            padding: '15px',
-            textAlign: 'center'
-          }}>
-            <img src={item.image} style={{ width: '100%', height: '150px', objectFit: 'cover', borderRadius: '8px' }} />
-            <h3 style={{ margin: '10px 0', color: '#333' }}>{item.name}</h3>
-            <p style={{ color: '#777' }}>{item.status} - {item.price}</p>
-            <p style={{ color: '#777' }}>{item.description}</p>
-            <p style={{ color: '#777' }}>{item.time}</p>
-            <button onClick={() => handleEdit(item)} style={{ ...buttonStyle, marginTop: '10px' }}>Editar</button>
-            <button onClick={() => handleDelete(item._id)} style={{ ...buttonStyle, marginTop: '10px', background: '#e3342f' }}>Excluir</button>
-          </div>
-        ))}
+        </form>
       </div>
-      <h2 style={{ marginTop: '50px', color: '#555' }}>QR Codes dos Restaurantes com Menu</h2>
 
-{restaurants.map(rest => {
-  const hasMenu = menu.some(item => item.restaurantId === rest.id);
+      <div className='menus'>
+        <h2 style={{ marginTop: '50px', marginBottom: '20px', color: '#555' }}>Menu Atual</h2>
 
-  if (!hasMenu) return null;
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+          gap: '15px',
+          width: '100%',
+          maxWidth: '1000px'
+        }}>
+          {menu.map(item => (
+            <div key={item._id} style={{
+              background: '#fff',
+              borderRadius: '8px',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
+              padding: '15px',
+              textAlign: 'center'
+            }}>
+              <img src={item.image} style={{ width: '100%', height: '150px', objectFit: 'cover', borderRadius: '8px' }} />
+              <h3 style={{ margin: '10px 0', color: '#333' }}>{item.name}</h3>
+              <p style={{ color: '#777' }}>{item.status} - {item.price}</p>
+              <p style={{ color: '#777' }}>{item.description}</p>
+              <p style={{ color: '#777' }}>{item.time}</p>
+              <button onClick={() => handleEdit(item)} style={{ ...buttonStyle, marginTop: '10px' }}>Editar</button>
+              <button onClick={() => handleDelete(item._id)} style={{ ...buttonStyle, marginTop: '10px', background: '#e3342f' }}>Excluir</button>
+            </div>
+          ))}
+        </div>
+      </div>
 
-  return (
-    <div key={rest.id} style={{ marginBottom: '20px', textAlign: 'center' }}>
-      <QRCodeCanvas 
-        value={`https://painel-orcin.vercel.app/${rest.id}`} 
-        size={200} 
-        bgColor="#FFFFFF" 
-        fgColor="#000000" 
-        level="H"
-      />
-      <p style={{ marginTop: '10px', color: '#333' }}>
-        Cardápio do <strong>{rest.name}</strong> - <code>{rest.id}</code>
-      </p>
-    </div>
-  );
-})}
+      <div className='qr-codes'>
+        <h2 style={{ marginTop: '50px', color: '#555' }}>QR Codes dos Restaurantes com Menu</h2>
 
+        {restaurants.map(rest => {
+          const hasMenu = menu.some(item => item.restaurantId === rest.id);
+
+          if (!hasMenu) return null;
+
+          return (
+            <div key={rest.id} style={{ marginBottom: '20px', textAlign: 'center' }}>
+              <QRCodeCanvas 
+                value={`https://painel-orcin.vercel.app/${rest.id}`} 
+                size={200} 
+                bgColor="#FFFFFF" 
+                fgColor="#000000" 
+                level="H"
+              />
+              <p style={{ marginTop: '10px', color: '#333' }}>
+                Cardápio do <strong>{rest.name}</strong> - <code>{rest.id}</code>
+              </p>
+            </div>
+          );
+        })}
+      </div>
 
     </main>
   );
