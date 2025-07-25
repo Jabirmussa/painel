@@ -18,7 +18,7 @@ export default function AdminPage() {
 
  const [form, setForm] = useState({
     name: '',
-    status: 'Disponível',
+    status: 'Pratos',
     restaurantId: selectedRestaurant,
     price: '',
     image: null,
@@ -76,7 +76,7 @@ export default function AdminPage() {
 
     setForm({
       name: '',
-      status: 'Disponível',
+      status: 'Pratos',
       restaurantId: 'demo',
       price: '',
       image: null,
