@@ -266,7 +266,7 @@ const handleEdit = (item) => {
                   {Array.from({ length: rest.tables }).map((_, index) => (
                     <div key={index} style={{ textAlign: 'center' }}>
                       <QRCodeCanvas 
-                        value={`https://painel-orcin.vercel.app/${rest.id}/mesa${index + 1}`} 
+                        value={`https://painel-orcin.vercel.app/${rest.id}`} 
                         size={160} 
                         bgColor="#FFFFFF" 
                         fgColor="#000000" 
