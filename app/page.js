@@ -7,10 +7,11 @@ import { QRCodeCanvas } from 'qrcode.react';
 export default function AdminPage() {
  
   const fakeRestaurants = [
-      { id: 'demo', name: 'Demo Restaurante' },
-      { id: 'rest01', name: 'Restaurante 01' },
-      { id: 'rest02', name: 'Restaurante 02' },
-    ];
+    { id: 'demo', name: 'Demo Restaurante', tables: 3 },
+    { id: 'rest01', name: 'Restaurante 01', tables: 4 },
+    { id: 'rest02', name: 'Restaurante 02', tables: 2 },
+  ];
+
   const [menu, setMenu] = useState([]);
   const [restaurants, setRestaurants] = useState(fakeRestaurants);
   const [selectedRestaurant, setSelectedRestaurant] = useState(fakeRestaurants[0].id);
@@ -243,30 +244,42 @@ const handleEdit = (item) => {
       </div>
 
       <div className='qr-codes'>
-        <h2 style={{ marginTop: '50px', color: '#555' }}>QR Codes dos Restaurantes com Menu</h2>
+          <h2 style={{ marginTop: '50px', color: '#000' }}>QR Codes das Mesas</h2>
 
-        {restaurants.map(rest => {
-          const hasMenu = menu.some(item => item.restaurantId === rest.id);
+          {restaurants.map(rest => {
+            const hasMenu = menu.some(item => item.restaurantId === rest.id);
 
-          if (!hasMenu) return null;
+            if (!hasMenu) return null;
 
-          return (
-            <div key={rest.id} style={{ marginBottom: '20px', textAlign: 'center' }}>
-              <QRCodeCanvas 
-                value={`https://painel-orcin.vercel.app/${rest.id}`} 
-                size={200} 
-                bgColor="#FFFFFF" 
-                fgColor="#000000" 
-                level="H"
-              />
-              <p style={{ marginTop: '10px', color: '#333' }}>
-                Cardápio do <strong>{rest.name}</strong> - <code>{rest.id}</code>
-              </p>
-            </div>
-          );
-        })}
-      </div>
+            return (
+              <div key={rest.id} style={{ marginBottom: '30px' }}>
+                <h3 style={{ textAlign: 'center', marginBottom: '15px', color: '#000' }}>
+                  QR Codes - <strong>{rest.name}</strong>
+                </h3>
 
+                <div style={{
+                  display: 'flex',
+                  gap: '20px',
+                  flexWrap: 'wrap',
+                  justifyContent: 'center'
+                }}>
+                  {Array.from({ length: rest.tables }).map((_, index) => (
+                    <div key={index} style={{ textAlign: 'center' }}>
+                      <QRCodeCanvas 
+                        value={`https://painel-orcin.vercel.app/${rest.id}/mesa${index + 1}`} 
+                        size={160} 
+                        bgColor="#FFFFFF" 
+                        fgColor="#000000" 
+                        level="H"
+                      />
+                      <p style={{ marginTop: '8px', color: '#000' }}>Mesa {index + 1}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            );
+          })}
+        </div>
     </main>
   );
 }
