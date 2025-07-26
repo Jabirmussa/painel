@@ -21,7 +21,7 @@ Este projeto é um painel administrativo desenvolvido com [Next.js](https://next
 - [React](https://reactjs.org)
 - [MongoDB](https://www.mongodb.com)
 - [QRCode Generator](https://www.npmjs.com/package/qrcode)
-- CSS Modules / Tailwind / Sass (dependendo do que você usou)
+- CSS Modules / Tailwind / Sass
 - Autenticação com JWT ou NextAuth
 
 ---
