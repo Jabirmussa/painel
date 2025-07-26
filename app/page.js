@@ -236,8 +236,20 @@ const handleEdit = (item) => {
               <p style={{ color: '#777' }}>{item.status} - {item.price}</p>
               <p style={{ color: '#777' }}>{item.description}</p>
               <p style={{ color: '#777' }}>{item.time}</p>
-              <button onClick={() => handleEdit(item)} style={{ ...buttonStyle, marginTop: '10px' }}>Editar</button>
-              <button onClick={() => handleDelete(item._id)} style={{ ...buttonStyle, marginTop: '10px', background: '#e3342f' }}>Excluir</button>
+              <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
+                <button
+                  onClick={() => handleEdit(item)}
+                  style={{ ...buttonStyle }}
+                >
+                  Editar
+                </button>
+                <button
+                  onClick={() => handleDelete(item._id)}
+                  style={{ ...buttonStyle, background: '#e3342f' }}
+                >
+                  Excluir
+                </button>
+              </div>
             </div>
           ))}
         </div>
