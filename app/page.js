@@ -149,6 +149,7 @@ const handleEdit = (item) => {
           borderRadius: '12px',
           boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
           width: '100%',
+          margin: '0 auto',
           maxWidth: '400px',
           display: 'flex',
           flexDirection: 'column',
@@ -217,11 +218,13 @@ const handleEdit = (item) => {
         <h2 style={{ marginTop: '50px', marginBottom: '20px', color: '#555' }}>Menu Atual</h2>
 
         <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-          gap: '15px',
-          width: '100%',
-          maxWidth: '1000px'
+           display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+            gap: '15px',
+            // width: '100%',
+            // maxWidth: '1000px',
+            margin: '0 auto',
+            padding: '0 15px'
         }}>
           {menu.map(item => (
             <div key={item._id} style={{
