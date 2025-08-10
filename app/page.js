@@ -141,77 +141,71 @@ const handleEdit = (item) => {
       fontFamily: 'sans-serif'
     }}>
       <div className='principal-painel' >
-        <h1 style={{ fontSize: '2rem', marginBottom: '20px', color: '#333' }}>Painel Menu</h1>
+        <div>
+          <h1 style={{ fontSize: '2rem', marginBottom: '20px', color: '#333' }}>Painel Menu</h1>
 
-        <form onSubmit={handleSubmit} style={{
-          background: '#fff',
-          padding: '30px',
-          borderRadius: '12px',
-          boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
-          width: '100%',
-          margin: '0 auto',
-          maxWidth: '400px',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '15px'
-        }}>
-          <label>
-            Selecione Restaurante:
-            <select name="restaurantId" value={form.restaurantId} onChange={handleChange} style={inputStyle}>
-              {restaurants.map(r => <option key={r.id} value={r.id}>{r.name}</option>)}
+          <form onSubmit={handleSubmit}>
+            <label>
+              Selecione Restaurante:
+              <select name="restaurantId" value={form.restaurantId} onChange={handleChange} style={inputStyle}>
+                {restaurants.map(r => <option key={r.id} value={r.id}>{r.name}</option>)}
+              </select>
+            </label>
+
+            <input
+              name="name"
+              placeholder="Nome do prato"
+              value={form.name}
+              onChange={handleChange}
+              style={inputStyle}
+            />
+            <input
+              name="price"
+              placeholder="Preço"
+              value={form.price}
+              onChange={handleChange}
+              style={inputStyle}
+            />
+            <input
+              name="time"
+              placeholder="Tempo de preparo"
+              value={form.time}
+              onChange={handleChange}
+              style={inputStyle}
+            />
+            <input
+              name="description"
+              placeholder="Descrição" 
+              value={form.description}
+              onChange={handleChange}
+              style={inputStyle}
+            />
+            <select name="status" value={form.status} onChange={handleChange} style={inputStyle}>
+              {/* <option>Disponível</option> */}
+              {/* <option>Esgotado</option> */}
+              {/* <option>Em preparo</option> */}
+              <option>Pratos</option>
+              <option>Bebidas</option>
+              <option>Pizzas</option>
+              <option>Sugestões</option>
+              <option>Prato do dia</option>
             </select>
-          </label>
+            <input
+              name="image"
+              type="file"
+              accept="image/*"
+              onChange={handleChange}
+              style={{ ...inputStyle, padding: '8px' }}
+            />
+            <button type="submit" style={buttonStyle}>
+              {editingId ? 'Atualizar' : 'Cadastrar'}
+            </button>
 
-          <input
-            name="name"
-            placeholder="Nome do prato"
-            value={form.name}
-            onChange={handleChange}
-            style={inputStyle}
-          />
-          <input
-            name="price"
-            placeholder="Preço"
-            value={form.price}
-            onChange={handleChange}
-            style={inputStyle}
-          />
-          <input
-            name="time"
-            placeholder="Tempo de preparo"
-            value={form.time}
-            onChange={handleChange}
-            style={inputStyle}
-          />
-          <input
-            name="description"
-            placeholder="Descrição" 
-            value={form.description}
-            onChange={handleChange}
-            style={inputStyle}
-          />
-          <select name="status" value={form.status} onChange={handleChange} style={inputStyle}>
-            {/* <option>Disponível</option> */}
-            {/* <option>Esgotado</option> */}
-            {/* <option>Em preparo</option> */}
-            <option>Pratos</option>
-            <option>Bebidas</option>
-            <option>Pizzas</option>
-            <option>Sugestões</option>
-            <option>Prato do dia</option>
-          </select>
-          <input
-            name="image"
-            type="file"
-            accept="image/*"
-            onChange={handleChange}
-            style={{ ...inputStyle, padding: '8px' }}
-          />
-          <button type="submit" style={buttonStyle}>
-            {editingId ? 'Atualizar' : 'Cadastrar'}
-          </button>
-
-        </form>
+          </form>
+        </div>
+          <div className='logo'>
+            <img src="/playstore.png" alt="Logo" />
+          </div>
       </div>
 
       <div className='menus'>
